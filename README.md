@@ -4,7 +4,6 @@ A Docker-based application that fine-tunes the Qwen language model on James Joyc
 
 ## Features
 
-- Downloads Finnegans Wake from Project Gutenberg
 - Fine-tunes Qwen-2-1.5B-Instruct using LoRA for efficient training
 - Provides a FastAPI-based REST API for style translation
 - Returns both original and translated text
