@@ -10,6 +10,7 @@ RUN pip install --no-cache-dir fastapi==0.104.1 uvicorn[standard]==0.24.0 pydant
 RUN cat > app.py << 'EOF'
 from fastapi import FastAPI
 from pydantic import BaseModel
+import re
 
 app = FastAPI(title="Mock Finnegans Wake Translator", version="1.0.0")
 
@@ -26,10 +27,23 @@ def root():
 
 @app.post("/translate", response_model=TranslationResponse)
 def translate(request: TranslationRequest):
-    # Mock Joyce-style translation
-    text = request.text.lower()
-    mock_translation = text.replace("the", "th'").replace("and", "an'").replace("you", "ye").replace("hello", "hallo").replace("ing", "in'")
-    mock_translation = f"Begorra! {mock_translation}, says I, in th' style of ould Joyce himself!"
+    # Mock Joyce-style translation with actual stylistic changes
+    text = request.text
+    
+    # Apply Joyce-like transformations
+    mock_translation = text.replace("the", "th'")
+    mock_translation = mock_translation.replace("and", "an'")
+    mock_translation = mock_translation.replace("you", "ye")
+    mock_translation = mock_translation.replace("your", "yer")
+    mock_translation = mock_translation.replace("Hello", "Hallo")
+    mock_translation = mock_translation.replace("hello", "hallo")
+    mock_translation = re.sub(r'ing\b', "in'", mock_translation)
+    mock_translation = mock_translation.replace("myself", "meself")
+    mock_translation = mock_translation.replace("says", "sez")
+    
+    # Add some Joyce-like word play occasionally
+    if "day" in mock_translation.lower():
+        mock_translation = mock_translation.replace("day", "dayeen")
     
     return TranslationResponse(
         original=request.text,

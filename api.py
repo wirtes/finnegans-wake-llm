@@ -70,7 +70,7 @@ class FinnegansTranslator:
     
     def translate(self, text: str) -> str:
         """Translate text to Finnegans Wake style."""
-        prompt = f"<|im_start|>user\nTranslate this to Finnegans Wake style: {text}<|im_end|>\n<|im_start|>assistant\n"
+        prompt = f"<|im_start|>user\nRewrite in Finnegans Wake style: {text}<|im_end|>\n<|im_start|>assistant\n"
         
         inputs = self.tokenizer(prompt, return_tensors="pt")
         
