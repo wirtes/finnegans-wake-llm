@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  finnegans-translator:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - SKIP_TRAINING=false  # Set to true to skip training for development
+    volumes:
+      - ./models:/app/qwen-finnegans-model  # Persist trained model
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
