@@ -24,11 +24,20 @@ SKIP_TRAINING=true docker-compose up --build
 ### Option 2: Development/Testing (Recommended for first try)
 
 ```bash
-# Build lightweight version for testing
-docker build -f Dockerfile.dev -t finnegans-translator-dev .
+# Build simple mock version for testing
+docker build -f Dockerfile.simple -t finnegans-mock .
 
-# Run development version (mock API)
-docker run -p 8000:8000 finnegans-translator-dev
+# Run mock version (instant startup)
+docker run -p 8000:8000 finnegans-mock
+```
+
+Alternative development build:
+```bash
+# Build lightweight version
+docker build -f Dockerfile.dev -t finnegans-dev .
+
+# Run development version
+docker run -p 8000:8000 finnegans-dev
 ```
 
 ### Option 3: Manual Docker Build
@@ -50,7 +59,7 @@ If you encounter build errors, try these solutions:
 
 1. **Memory Issues**: Increase Docker memory limit to at least 8GB
 2. **Timeout Issues**: The build downloads large ML models, ensure good internet connection
-3. **Dependency Conflicts**: Try the development version first: `docker build -f Dockerfile.dev -t test .`
+3. **Dependency Conflicts**: Try the simple mock version first: `docker build -f Dockerfile.simple -t test .`
 4. **Platform Issues**: Add `--platform linux/amd64` to docker build command on Apple Silicon Macs
 
 ### Local Development

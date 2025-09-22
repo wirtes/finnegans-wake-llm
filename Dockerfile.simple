@@ -1,0 +1,48 @@
+FROM python:3.10-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install minimal dependencies
+RUN pip install --no-cache-dir fastapi==0.104.1 uvicorn[standard]==0.24.0 pydantic==2.5.0
+
+# Create mock API inline
+RUN cat > app.py << 'EOF'
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI(title="Mock Finnegans Wake Translator", version="1.0.0")
+
+class TranslationRequest(BaseModel):
+    text: str
+
+class TranslationResponse(BaseModel):
+    original: str
+    translated: str
+
+@app.get("/")
+def root():
+    return {"message": "Mock Finnegans Wake Style Translator API"}
+
+@app.post("/translate", response_model=TranslationResponse)
+def translate(request: TranslationRequest):
+    # Mock Joyce-style translation
+    text = request.text.lower()
+    mock_translation = text.replace("the", "th'").replace("and", "an'").replace("you", "ye").replace("hello", "hallo").replace("ing", "in'")
+    mock_translation = f"Begorra! {mock_translation}, says I, in th' style of ould Joyce himself!"
+    
+    return TranslationResponse(
+        original=request.text,
+        translated=mock_translation
+    )
+
+@app.get("/health")
+def health():
+    return {"status": "healthy", "model_loaded": False, "mode": "mock"}
+EOF
+
+# Expose API port
+EXPOSE 8000
+
+# Run the app
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -18,14 +18,11 @@ RUN pip install --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir \
     fastapi==0.104.1 \
     uvicorn[standard]==0.24.0 \
-    requests==2.31.0
-
-# Copy only necessary files
-COPY api.py .
-COPY test_api.py .
+    requests==2.31.0 \
+    pydantic==2.5.0
 
 # Create a simple mock API for testing
-RUN echo 'from fastapi import FastAPI\napp = FastAPI()\n@app.get("/")\ndef root():\n    return {"message": "Mock API - Training disabled"}\n@app.post("/translate")\ndef translate(request: dict):\n    return {"original": request.get("text", ""), "translated": "Mock translation: " + request.get("text", "")}' > mock_api.py
+RUN echo 'from fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI(title="Mock Finnegans Wake Translator")\n\nclass TranslationRequest(BaseModel):\n    text: str\n\nclass TranslationResponse(BaseModel):\n    original: str\n    translated: str\n\n@app.get("/")\ndef root():\n    return {"message": "Mock API - Training disabled"}\n\n@app.post("/translate", response_model=TranslationResponse)\ndef translate(request: TranslationRequest):\n    mock_translation = f"Begorra, {request.text} in the style of Joyce, ye ken!"\n    return TranslationResponse(original=request.text, translated=mock_translation)\n\n@app.get("/health")\ndef health():\n    return {"status": "healthy", "model_loaded": False, "mode": "mock"}' > mock_api.py
 
 # Expose API port
 EXPOSE 8000
