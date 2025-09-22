@@ -39,8 +39,8 @@ class FinnegansTranslator:
             # Load base model and apply LoRA weights
             base_model = AutoModelForCausalLM.from_pretrained(
                 "Qwen/Qwen2-1.5B-Instruct",
-                torch_dtype=torch.float16,
-                device_map="auto",
+                torch_dtype=torch.float32,
+                device_map="cpu",
                 trust_remote_code=True
             )
             
@@ -63,8 +63,8 @@ class FinnegansTranslator:
         
         self.model = AutoModelForCausalLM.from_pretrained(
             "Qwen/Qwen2-1.5B-Instruct",
-            torch_dtype=torch.float16,
-            device_map="auto",
+            torch_dtype=torch.float32,
+            device_map="cpu",
             trust_remote_code=True
         )
     

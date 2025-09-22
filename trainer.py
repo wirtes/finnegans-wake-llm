@@ -36,8 +36,8 @@ class QwenFinnegansTrainer:
         
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
-            torch_dtype=torch.float16,
-            device_map="auto",
+            torch_dtype=torch.float32,
+            device_map="cpu",
             trust_remote_code=True
         )
         
@@ -98,15 +98,15 @@ class QwenFinnegansTrainer:
         """Train the model."""
         training_args = TrainingArguments(
             output_dir=self.output_dir,
-            num_train_epochs=3,
-            per_device_train_batch_size=2,
-            gradient_accumulation_steps=4,
-            warmup_steps=100,
+            num_train_epochs=2,
+            per_device_train_batch_size=1,
+            gradient_accumulation_steps=8,
+            warmup_steps=50,
             logging_steps=10,
             save_steps=500,
             evaluation_strategy="no",
             save_strategy="steps",
-            fp16=True,
+            fp16=False,
             remove_unused_columns=False,
         )
         

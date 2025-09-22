@@ -9,10 +9,3 @@ services:
       - SKIP_TRAINING=false  # Set to true to skip training for development
     volumes:
       - ./models:/app/qwen-finnegans-model  # Persist trained model
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]

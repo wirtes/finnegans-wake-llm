@@ -11,12 +11,20 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
+# Upgrade pip and install wheel
+RUN pip install --upgrade pip setuptools wheel
+
 # Copy requirements first for better caching
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Install Python dependencies with increased timeout
+RUN pip install --no-cache-dir --timeout=1000 -r requirements.txt
 
 # Copy application code
 COPY . .
+
+# Create models directory
+RUN mkdir -p qwen-finnegans-model
 
 # Expose API port
 EXPOSE 8000
